@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ctrl/tinycolor": "^2.4.0",
     "@emotion/core": "^10.0.10",
     "@emotion/styled": "^10.0.10",
     "axios": "^0.18.0",

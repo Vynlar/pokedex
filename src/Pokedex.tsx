@@ -1,28 +1,20 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter, BrowserRouterProps } from 'react-router-dom';
-import axios, { AxiosResponse } from 'axios';
 import styled from '@emotion/styled';
 
 import config, { theme } from './config';
+import { Pokemon, PokemonType } from './pokemon';
 
 import Button from './Button';
 import Card, { CardHeader, CardBody, CardContainer } from './Card';
 import Search from './Search';
 import Pill from './Pill';
+import { fetchPokemon } from './request';
 
 type Props = RouteComponentProps<RouteParams> & BrowserRouterProps;
 
 type RouteParams = {
     page?: string,
-}
-
-export type PokemonType = "bug" | "dragon" | "electric" | "fighting" | "fire" | "flying" | "ghost" | "grass" | "ground" | "ice" | "normal" | "poison" | "psychic" | "rock" | "water";
-
-type Pokemon = {
-    id: number,
-    name: string,
-    image: string,
-    types: PokemonType[],
 }
 
 type State = {
@@ -32,14 +24,6 @@ type State = {
         total: number,
     },
     search: string,
-}
-
-type PokemonResponse = {
-    data: Pokemon[],
-    meta: {
-        per_page: number,
-        total: number,
-    }
 }
 
 const PokemonPhoto = styled.img`
@@ -124,20 +108,12 @@ export class Pokedex extends React.Component<Props, State> {
     }
 
     async loadPokemon(search: string) {
-        const data: AxiosResponse<PokemonResponse> = await axios.get(
-            config.baseUrl + "/v1/pokemon",
-            {
-                params: {
-                    page: this.currentPage(),
-                    name: search,
-                }
-            }
-        );
+        const data = await fetchPokemon(this.currentPage(), this.state.search);
         this.setState({
-            pokemon: data.data.data,
+            pokemon: data.data,
             pagination: {
-                perPage: data.data.meta.per_page,
-                total: data.data.meta.total,
+                perPage: data.meta.per_page,
+                total: data.meta.total,
             }
         });
     }
@@ -175,7 +151,7 @@ export class Pokedex extends React.Component<Props, State> {
                                     <PokemonPhoto src={pokemon.image} />
                                     <PillContainer>
                                         {pokemon.types.map(type => (
-                                            <Pill>{type}</Pill>
+                                            <Pill key={type}>{type}</Pill>
                                         ))}
                                     </PillContainer>
                                 </CardBody>

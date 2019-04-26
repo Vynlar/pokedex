@@ -15,7 +15,7 @@ const Field = styled.input`
     border-radius: 7px;
     max-width: 60%;
     width: 100%;
-    padding: 0 10%;
+    padding: 0 100px;
     font-size: 72px;
     color: white;
     font-weight: bold;
