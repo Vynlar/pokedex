@@ -39,8 +39,7 @@ const PillContainer = styled.div`
     display: flex;
     justify-content: flex-end;
     flex-wrap: wrap;
-    width: calc(100% - 2*20px);
-    margin: 20px;
+    width: 100%;
 `;
 
 const CardLink = styled(Link)`

@@ -8,6 +8,10 @@ export const Container = styled.div`
     padding-top: 0;
     background: ${theme.colors.brand};
     min-height: 100vh;
+
+    @media min-width(720px) {
+
+    }
 `;
 
 export const Content = styled.div`
