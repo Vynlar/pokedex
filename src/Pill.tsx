@@ -77,6 +77,7 @@ const Container = styled.div`
     padding: 4px 6px;
     border-radius: 3px;
     margin-left: 8px;
+    line-height: 1em;
 `;
 
 export default function Pill(props: Props) {

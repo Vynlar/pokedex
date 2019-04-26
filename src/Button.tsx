@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/core';
 import { Link } from 'react-router-dom';
-import { theme } from './config';
 
 const active = css`
     cursor: pointer;
@@ -25,6 +24,7 @@ type ContainerProps = {
 };
 
 const Container = styled.div`
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +38,7 @@ const Container = styled.div`
 `;
 
 type Props = {
-    children?: React.ReactChildren | string,
+    children?: React.ReactNode | string,
     disabled?: boolean,
     onClick?: () => any,
     to?: string,

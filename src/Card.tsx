@@ -7,6 +7,13 @@ const Card = styled.div`
     flex: 1;
     margin: 8px;
     border-radius: 2px;
+    transition: transform 0.1s, box-shadow 0.1s;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    }
 `;
 
 export const CardHeader = styled.div`
@@ -23,6 +30,7 @@ export const CardBody = styled.div`
 `;
 
 export const CardContainer = styled.div`
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     margin: 0 -8px;

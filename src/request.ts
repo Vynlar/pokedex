@@ -11,7 +11,6 @@ type PokemonResponse = {
     }
 }
 
-
 export async function fetchPokemon(currentPage: number, search: string) {
     const data: AxiosResponse<PokemonResponse> = await axios.get(
         config.baseUrl + "/v1/pokemon",
