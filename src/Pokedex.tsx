@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter, BrowserRouterProps } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import styled from '@emotion/styled';
 
@@ -8,18 +8,21 @@ import config, { theme } from './config';
 import Button from './Button';
 import Card, { CardHeader, CardBody, CardContainer } from './Card';
 import Search from './Search';
+import Pill from './Pill';
 
-type Props = RouteComponentProps<RouteParams>;
+type Props = RouteComponentProps<RouteParams> & BrowserRouterProps;
 
 type RouteParams = {
     page?: string,
 }
 
+export type PokemonType = "bug" | "dragon" | "electric" | "fighting" | "fire" | "flying" | "ghost" | "grass" | "ground" | "ice" | "normal" | "poison" | "psychic" | "rock" | "water";
+
 type Pokemon = {
     id: number,
     name: string,
     image: string,
-    types: string[],
+    types: PokemonType[],
 }
 
 type State = {
@@ -44,11 +47,19 @@ const PokemonPhoto = styled.img`
     object-fit: contain;
 `;
 
+const PillContainer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    width: calc(100% - 2*20px);
+    margin: 20px;
+`;
 
 const Container = styled.div`
     padding: 48px;
+    padding-top: 0;
     background: ${theme.colors.brand};
-    height: 100%;
+    min-height: 100vh;
 `;
 
 const Content = styled.div`
@@ -59,7 +70,9 @@ const Content = styled.div`
 const Header = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 32px;
+    padding-top: 40px;
 `;
 
 const EmptyState = styled.div`
@@ -67,10 +80,12 @@ const EmptyState = styled.div`
     height: 100px;
     display: flex;
     justify-content: center;
+    margin-top: 50px;
     font-weight: bold;
+    color: white;
 `;
 
-export default class Pokedex extends React.Component<Props, State> {
+export class Pokedex extends React.Component<Props, State> {
     state: State = {
         pokemon: [],
         pagination: {
@@ -100,7 +115,7 @@ export default class Pokedex extends React.Component<Props, State> {
     }
 
     private hasNextPage(): boolean {
-        if(this.totalPages() === this.currentPage() && this.totalPages() !== 0) return false;
+        if(this.totalPages() === this.currentPage() || this.totalPages() === 0) return false;
         return true;
     }
 
@@ -132,6 +147,7 @@ export default class Pokedex extends React.Component<Props, State> {
             search: event.target.value,
         });
         this.loadPokemon(event.target.value);
+        this.props.history.push(`/page/1`);
     }
 
     render() {
@@ -147,7 +163,7 @@ export default class Pokedex extends React.Component<Props, State> {
                     <CardContainer>
                         {this.state.pokemon.length === 0 ? (
                             <EmptyState>
-                                Aww Magikarp! We couldn't find anyone by that name.
+                                Aww Magikarp! We couldn't find any Pokémon by that name.
                             </EmptyState>
                         ) : null}
                         {this.state.pokemon.map((pokemon: Pokemon) =>
@@ -157,6 +173,11 @@ export default class Pokedex extends React.Component<Props, State> {
                                 </CardHeader>
                                 <CardBody>
                                     <PokemonPhoto src={pokemon.image} />
+                                    <PillContainer>
+                                        {pokemon.types.map(type => (
+                                            <Pill>{type}</Pill>
+                                        ))}
+                                    </PillContainer>
                                 </CardBody>
                             </Card>
                         )}
@@ -166,3 +187,5 @@ export default class Pokedex extends React.Component<Props, State> {
         );
     }
 }
+
+export default withRouter(Pokedex);

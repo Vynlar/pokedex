@@ -3,7 +3,6 @@ import { theme } from './config';
 
 const Card = styled.div`
     min-width: 220px;
-    max-width: 33%;
     background: white;
     flex: 1;
     margin: 8px;
@@ -19,7 +18,8 @@ export const CardHeader = styled.div`
 
 export const CardBody = styled.div`
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 `;
 
 export const CardContainer = styled.div`
