@@ -7,6 +7,7 @@ import { PokemonType } from './pokemon';
 type Props = {
     children: PokemonType,
 };
+
 const black = new TinyColor('black').lighten(20).toRgbString();
 const brown = new TinyColor('brown').darken(20).toRgbString();
 function typeToColor(type: PokemonType): string {

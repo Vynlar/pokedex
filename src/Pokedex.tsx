@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter, BrowserRouterProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter, BrowserRouterProps, Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { Container, Content, Header, Loading, EmptyState } from './Layout';
 
 import config, { theme } from './config';
 import { Pokemon, PokemonType } from './pokemon';
@@ -11,7 +12,7 @@ import Button from './Button';
 import Card, { CardHeader, CardBody, CardContainer } from './Card';
 import Search from './Search';
 import Pill from './Pill';
-import { fetchPokemon } from './request';
+import { fetchPageOfPokemon } from './request';
 
 type Props = RouteComponentProps<RouteParams> & BrowserRouterProps;
 
@@ -42,56 +43,9 @@ const PillContainer = styled.div`
     margin: 20px;
 `;
 
-const Container = styled.div`
-    padding: 48px;
-    padding-top: 0;
-    background: ${theme.colors.brand};
-    min-height: 100vh;
-`;
-
-const Content = styled.div`
-    max-width: 1280px;
-    margin: auto;
-`;
-
-const Header = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 32px;
-    padding-top: 40px;
-`;
-
-const Loading = styled.div`
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
-    min-height: 400px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.7);
-    transition: opacity 0.2s;
-    transition-delay: 0.25s;
-    opacity: ${(props: { visible: boolean }) => props.visible ? 1 : 0};
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 48px;
-    z-index: 10;
-`;
-
-const EmptyState = styled.div`
-    width: 100%;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    margin-top: 50px;
-    font-weight: bold;
-    color: white;
+const CardLink = styled(Link)`
+    text-decoration: none;
+    flex: 1;
 `;
 
 export class Pokedex extends React.Component<Props, State> {
@@ -147,7 +101,7 @@ export class Pokedex extends React.Component<Props, State> {
         }
         this.timer = setTimeout(async () => {
             this.setState({ loading: true });
-            const data = await fetchPokemon(this.currentPage(), search);
+            const data = await fetchPageOfPokemon(this.currentPage(), search);
             this.setState({
                 pokemon: data.data,
                 pagination: {
@@ -156,19 +110,28 @@ export class Pokedex extends React.Component<Props, State> {
                 },
                 loading: false,
             });
-        }, 500);
+        }, 250);
     }
 
-    private searchChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    private updateSearchState(value: string) {
         this.setState({
-            search: event.target.value,
+            search: value,
         });
-        this.loadPokemon(event.target.value);
+        this.loadPokemon(value);
         /* redirect to the first page whenever you type into the search bar
           This is to prevent invalid state for `currentPage`. For example, if you are on page 7, and then search for something specific,
           it's likely that page 7 no longer exists and so redirecting to page 1 fixes this problem
         */
         this.props.history.push(`/page/1`);
+    }
+
+    private searchChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.updateSearchState(event.target.value);
+    }
+
+
+    private clearSearch = () => {
+        this.updateSearchState("");
     }
 
     render() {
@@ -179,7 +142,7 @@ export class Pokedex extends React.Component<Props, State> {
                         <Button disabled={!this.hasPreviousPage()} to={`/page/${this.currentPage() - 1}`}>
                             <FontAwesomeIcon icon={faArrowLeft} />
                         </Button>
-                        <Search onChange={this.searchChanged} value={this.state.search} />
+                        <Search onChange={this.searchChanged} value={this.state.search} onClear={this.clearSearch} />
                         <Button disabled={!this.hasNextPage()} to={`/page/${this.currentPage() + 1}`}>
                             <FontAwesomeIcon icon={faArrowRight} />
                         </Button>
@@ -197,19 +160,21 @@ export class Pokedex extends React.Component<Props, State> {
                             </EmptyState>
                         ) : (
                             this.state.pokemon.map((pokemon: Pokemon) =>
-                                <Card key={pokemon.id}>
-                                    <CardHeader>
-                                        {pokemon.name}
-                                    </CardHeader>
-                                    <CardBody>
-                                        <PokemonPhoto src={pokemon.image} />
-                                        <PillContainer>
-                                            {pokemon.types.map(type => (
-                                                <Pill key={type}>{type}</Pill>
-                                            ))}
-                                        </PillContainer>
-                                    </CardBody>
-                                </Card>
+                                <CardLink to={`/pokemon/${pokemon.id}`}>
+                                    <Card key={pokemon.id}>
+                                        <CardHeader>
+                                            {pokemon.name}
+                                        </CardHeader>
+                                        <CardBody>
+                                            <PokemonPhoto src={pokemon.image} />
+                                            <PillContainer>
+                                                {pokemon.types.map(type => (
+                                                    <Pill key={type}>{type}</Pill>
+                                                ))}
+                                            </PillContainer>
+                                        </CardBody>
+                                    </Card>
+                                </CardLink>
                             )
                         )}
                     </CardContainer>

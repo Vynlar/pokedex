@@ -4,11 +4,11 @@ import { theme } from './config';
 const Card = styled.div`
     min-width: 220px;
     background: white;
-    flex: 1;
     margin: 8px;
     border-radius: 2px;
     transition: transform 0.1s, box-shadow 0.1s;
     cursor: pointer;
+    color: black;
 
     &:hover {
         transform: translateY(-3px);
@@ -21,9 +21,17 @@ export const CardHeader = styled.div`
     border-bottom: 1px solid ${theme.colors.greyLightest};
     font-weight: bold;
     font-size: 16px;
+    display: flex;
+    flex-wrap: wrap;
+
+    span {
+        margin-left: 8px;
+        opacity: 0.4;
+    }
 `;
 
 export const CardBody = styled.div`
+    padding: 17px 24px;
     display: flex;
     align-items: center;
     flex-direction: column;
