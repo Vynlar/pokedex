@@ -1,6 +1,9 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import { theme } from './config';
+import { TinyColor } from '@ctrl/tinycolor';
+
 
 
 export const Container = styled.div`
@@ -9,8 +12,10 @@ export const Container = styled.div`
     background: ${theme.colors.brand};
     min-height: 100vh;
 
-    @media min-width(720px) {
-
+    @media (max-width: 425px) {
+        padding: 8px;
+        border-top: 24px solid ${new TinyColor(theme.colors.brand).darken(15).toHexString()};
+        padding-top: 0;
     }
 `;
 
@@ -25,6 +30,10 @@ export const Header = styled.div`
     align-items: center;
     padding: 32px;
     padding-top: 40px;
+
+    @media (max-width: 426px) {
+        padding: 16px 0 16px 0;
+    }
 `;
 
 export const Loading = styled.div`
@@ -57,4 +66,17 @@ export const EmptyState = styled.div`
     margin-top: 50px;
     font-weight: bold;
     color: white;
+    padding: 0 8px;
+`;
+
+export const hideOnMobile = css`
+    @media (max-width: 425px) {
+        display: none;
+    }
+`;
+
+export const showOnMobile = css`
+    @media (min-width: 426px) {
+        display: block;
+    }
 `;

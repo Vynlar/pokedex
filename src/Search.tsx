@@ -13,6 +13,12 @@ type Props = {
 
 const Container = styled.div`
     position: relative;
+    margin: 0 16px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin: 0;
+    }
 `;
 
 const Field = styled.input`
@@ -38,6 +44,17 @@ const Field = styled.input`
     &::placeholder {
         color: rgba(0,0,0,0.16);
     }
+
+    @media (max-width: 768px) {
+        height: 48px;
+        font-size: 18px;
+        padding-left: 30px;
+        border-radius: 8px;
+
+        &::placeholder {
+            color: rgba(255,255,255,0.30);
+        }
+    }
 `;
 
 const iconStyles = css`
@@ -50,6 +67,10 @@ const iconStyles = css`
 
 const SearchIcon = styled(FontAwesomeIcon)`
     ${iconStyles};
+
+    @media (max-width: 768px) {
+        left: 2px;
+    }
 `;
 
 const Clear = styled(FontAwesomeIcon)`

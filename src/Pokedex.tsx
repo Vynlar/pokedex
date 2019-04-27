@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter, BrowserRouterProps, Link } from 'react
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { Container, Content, Header, Loading, EmptyState } from './Layout';
+import { Container, Content, Header, Loading, EmptyState, hideOnMobile } from './Layout';
 
 import config, { theme } from './config';
 import { Pokemon, PokemonType } from './pokemon';
@@ -13,6 +13,7 @@ import Card, { CardHeader, CardBody, CardContainer } from './Card';
 import Search from './Search';
 import Pill from './Pill';
 import { fetchPageOfPokemon } from './request';
+import { TinyColor } from '@ctrl/tinycolor';
 
 type Props = RouteComponentProps<RouteParams> & BrowserRouterProps;
 
@@ -45,6 +46,32 @@ const PillContainer = styled.div`
 const CardLink = styled(Link)`
     text-decoration: none;
     flex: 1;
+`;
+
+const MobileFooter = styled.div`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 48px;
+    background: ${new TinyColor(theme.colors.brand).darken(30).toHexString()};
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(2px) brightness(50%);
+    padding: 0 16px;
+
+    @media (min-width: 768px) {
+        display: none;
+    }
+`;
+
+const HideOnMobile = styled.div`
+    @media (max-width: 768px) {
+        display: none;
+    }
 `;
 
 export class Pokedex extends React.Component<Props, State> {
@@ -133,18 +160,34 @@ export class Pokedex extends React.Component<Props, State> {
         this.updateSearchState("");
     }
 
+    private renderBackButton() {
+        return (
+            <Button disabled={!this.hasPreviousPage()} to={`/page/${this.currentPage() - 1}`}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+            </Button>
+        );
+    }
+
+    private renderNextButton() {
+        return (
+            <Button disabled={!this.hasNextPage()} to={`/page/${this.currentPage() + 1}`}>
+                <FontAwesomeIcon icon={faArrowRight} />
+            </Button>
+        );
+    }
+
     render() {
         return (
             <Container>
                 <Content>
                     <Header>
-                        <Button disabled={!this.hasPreviousPage()} to={`/page/${this.currentPage() - 1}`}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </Button>
+                        <HideOnMobile>
+                            {this.renderBackButton()}
+                        </HideOnMobile>
                         <Search onChange={this.searchChanged} value={this.state.search} onClear={this.clearSearch} />
-                        <Button disabled={!this.hasNextPage()} to={`/page/${this.currentPage() + 1}`}>
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </Button>
+                        <HideOnMobile>
+                            {this.renderNextButton()}
+                        </HideOnMobile>
                     </Header>
 
                     <CardContainer>
@@ -177,6 +220,11 @@ export class Pokedex extends React.Component<Props, State> {
                             )
                         )}
                     </CardContainer>
+
+                    <MobileFooter>
+                        {this.renderBackButton()}
+                        {this.renderNextButton()}
+                    </MobileFooter>
                 </Content>
             </Container>
         );

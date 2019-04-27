@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Container, Content, Header, Loading } from './Layout';
+import { css } from '@emotion/core';
+import { Container, Content, Header, Loading, hideOnMobile } from './Layout';
 import { DetailedPokemon, Stat, statToString } from './pokemon';
 import { fetchPokemonById } from './request';
 import { TinyColor } from '@ctrl/tinycolor';
@@ -28,6 +29,26 @@ const Title = styled.div`
     font-weight: bold;
     font-size: 8vmin;
     color: white;
+
+    span {
+        margin-left: 10px;
+        opacity: 0.8;
+        display: none;
+    }
+
+    @media (max-width: 425px) {
+        font-size: 18px;
+        margin-right: auto;
+        margin-left: 8px;
+
+        span {
+            display: inline;
+        }
+    }
+`;
+
+const DesktopName = styled.div`
+    ${hideOnMobile};
 `;
 
 const Panel = styled.div`
@@ -69,6 +90,12 @@ const Photo = styled.img`
     object-fit: contain;
     height: 130px;
     min-width: 150px;
+
+    @media (max-width: 425px) {
+        position: absolute;
+        top: 24px;
+        right: 0;
+    }
 `;
 
 const Row = styled.div`
@@ -78,8 +105,11 @@ const Row = styled.div`
 `;
 
 const Types = styled.div`
-    margin-left: auto;
     display: flex;
+
+    @media (min-width: 426px) {
+        margin-left: auto;
+    }
 `;
 
 const StatBlock = styled.ul`
@@ -94,7 +124,7 @@ const StatBlock = styled.ul`
 const StatRow = styled.div`
     display: flex;
     margin-bottom: 3px;
-    min-width: 150px;
+    min-width: 80px;
 
     span {
         min-width: 65px;
@@ -162,7 +192,9 @@ export class PokemonDetails extends React.Component<Props, State> {
         return (
             <div>
                 <CardHeader>
-                    {pokemon.name}<span>#{pokemon.id}</span>
+                    <DesktopName>
+                        {pokemon.name}<span>#{pokemon.id}</span>
+                    </DesktopName>
                     <Types>
                         {pokemon.types.map(type => (
                             <Pill>{type}</Pill>
@@ -228,7 +260,12 @@ export class PokemonDetails extends React.Component<Props, State> {
                         <Button to='/'>
                             <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
                         </Button>
-                        <Title>{this.state.pokemon ? this.state.pokemon.name : null}</Title>
+                        <Title>{this.state.pokemon ? (
+                            <>
+                                {this.state.pokemon.name}
+                                <span>#{this.state.pokemon.id}</span>
+                            </>
+                        ) : null}</Title>
                         <Button disabled></Button>
                     </Header>
 

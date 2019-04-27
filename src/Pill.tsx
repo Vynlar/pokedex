@@ -79,6 +79,10 @@ const Container = styled.div`
     border-radius: 3px;
     margin-left: 8px;
     line-height: 1em;
+
+    &:first-child {
+        margin-left: 0;
+    }
 `;
 
 export default function Pill(props: Props) {

@@ -17,6 +17,7 @@ const active = css`
         transform: scale(0.98);
         filter: brightness(0.8);
     }
+
 `;
 
 type ContainerProps = {
@@ -35,6 +36,13 @@ const Container = styled.div`
     cursor: not-allowed;
     visibility: hidden;
     ${(props: ContainerProps) => props.disabled ? null : active};
+
+    @media (max-width: 768px) {
+        background: none;
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
 `;
 
 type Props = {
