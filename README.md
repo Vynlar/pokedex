@@ -8,7 +8,7 @@ The site is [hosted here](https://adrian-pokedex.netlify.com/).
 
 ## To-do List
 - [ ] Unit tests
-- [ ] Finish responsiveness (Search bar + navigation buttons in particular)
+- [x] Finish responsiveness (Search bar + navigation buttons in particular)
 - [ ] Request error handling
 - [ ] 404 page
 
