@@ -29,7 +29,7 @@
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.2",
-    "parcel": "^1.12.3",
+    "parcel": "^2.8.2",
     "sass": "^1.19.0",
     "typescript": "^3.4.5"
   }
